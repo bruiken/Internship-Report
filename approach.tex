@@ -1,0 +1,114 @@
+\chapter{Approach}\label{ch:approach}
+This chapter covers more details on the approach that was taken in this research.
+We will explain the details of the implementation of the \emph{fix} operator
+designed to use in aCaPulCO. We will first look at the separation of the 
+\emph{simple} and \emph{complex} constraints, and how they are represented in
+aCaPulCO. Following that, we look at the design of the operator itself.
+
+\section{Complex constraints}
+First, recall that both the simple and complex constraints are cross-tree
+constraints. Since aCaPulCO currently only accepts simple constraints in its
+CPCO generation, the complex constraints are simply filtered out of the input
+model. After parsing the cross-tree constraints, the arbitrary boolean formulas
+are converted to CNF notation. The two accepted types of constraints 
+(\emph{requires} and \emph{excludes} relationships) then look as follows:
+
+\begin{itemize}
+    \item \textit{Requires relationship}: A \emph{requires} relation is when a
+          feature requires another feature for it to be enabled. We can see this
+          as a logical implication, where if feature $f$ \emph{requires} feature 
+          $g$, we have \( f \Rightarrow g \). Since the CNF notation only allows
+          for conjunctions of disjunction, this is transformed to \( \neg f \lor g \).
+    \item \textit{Excludes relationship}: An \emph{excludes} relation is when
+          enabling a feature means that some other feature cannot be enabled. This
+          can also be represented using a logical implication, where if feature $f$
+          excludes feature $g$, we have \( f \Rightarrow \neg g \). In CNF notation
+          we get \( \neg f \lor \neg g \).
+\end{itemize}
+
+In the preprocessing step for an input feature model in aCaPulCO, complex
+constraints are already filtered out of the constraints. To be able to separate
+the two types of constraints, we will still save the complex constraints in a
+separate model. Our new \emph{fix} operator can then use this separate model to
+retrieve only the complex constraints.
+
+Now that we can distinguish the complex from the simple constraints, we can
+continue onto the actual implementation of the operator itself.
+
+\section{Fix operator}
+The new \emph{fix} operator is tasked with dealing with complex constraints.
+It will be called during the creation of the initial population, and after
+crossover and mutation happen during the run of the genetic algorithm. This
+is the same strategy as we have seen in MODAGAME~\cite{pascual2015modagame}.
+The input configuration of our fix operator is a configuration which we know
+is correct with the non cross-tree constraints of the feature model, as well
+as the simple constraints. The strategy for fixing the constraints for the
+complex constraints is very similar to the strategy used in MODAGAME. Where
+MODAGAME needed to fix both the tree constraints and cross-tree constraints,
+we only need to fix the cross-tree constraints.
+
+Recall that MODAGAME fixes the cross-tree constraints by looking at all of
+the input constraints and doing the following:
+\begin{enumerate}
+    \item If the current constraint is valid with the input configuration,
+          go to the next constraint.
+    \item Now we have to fix the constraint, which we can do by enabling or
+          disabling exactly one feature in the constraint. This is because the
+          input constraint is always a disjunction of features.
+    \item If we manage to fix the constraint using one activation or
+          deactivation, restart the process since we might have invalidated a previous
+          constraint.
+    \item If we do not manage to fix the constraint, result in failure.
+\end{enumerate}
+
+In MODAGAME, the enabling or disabling of features was quite expensive as no
+information about what needs to happen to other features is stored. We 
+have a simple way to enable or disable features: we have CPCOs. If we want to
+enable feature \emph{A} to fix some constraint, we can simply call the CPCO for
+the activation of \emph{A}.
+
+Let us look at an example where our input configuration is as follows:
+\( \left\{ \neg A, B, C, \neg D \right\} \). Now imagine we have constraints:
+\(c_1: A \lor \neg B \lor D \) and \(c_2: \neg A \lor C \). 
+Currently, constraint $c_1$ is invalid and is fixable
+in three separate ways: we can either activate feature \emph{A} or \emph{D}, or
+we can deactivate feature \emph{B}. It would be problematic to activate feature
+\emph{A} however, as activating it would break constraint $c_2$. In our operator,
+we randomly apply a strategy, similar to MODAGAME. We do this to not always get
+stuck in the same loops (e.g. trying to activate and deactivate \emph{A} to adhere
+to constraints $c_1$ and $c_2$).
+
+\section{Limitation of approach}
+This approach works, and the algorithm for fixing the constraints could even be
+improved to reach success states faster. Yet there is a problem, to be able to
+fix any complex cross-tree constraint, we may need to activate or deactivate any
+given feature. Thus far, aCaPulCO did not require all the rules to be generated
+to get results. It turns out that aCaPulCO outperforms the other
+state-of-the-art tools, all the while not having generated close to all of the
+CPCOs. This means that for a given feature model with for example 10.000 features,
+it may only generate activation and deactivation rules for 1\% of these features.
+It is of course likely that cross-tree constraints cover many features of the other
+99\% of the non-generated rules. Our fix operator cannot repair those constraints,
+as it can only use the rules.
+
+One possible way of preventing this from happening might be to fix the
+configurations without using the generated rules. If we do that, we manually flip
+the bit in the bitstring for the appropriate feature and move on. There are two
+problems with this approach:
+\begin{itemize}
+    \item We cannot assure that we keep true to the non cross-tree constraints, as
+          we do not have functionality for that (the CPCOs made sure of this before).
+    \item The crossover and mutation operators work not on the bitstrings themselves,
+          but by combining rules applied to both parents. This means that the
+          configurations themselves are not that important during the run of the
+          algorithm. If we were to manually make changes, these changes would virtually
+          be removed in the next crossover process.
+\end{itemize}
+
+Especially the second point is important for us. It would mean that during the entire
+run of the algorithm, the fixes for the complex constraints are irrelevant. In that
+case, we could also apply the \emph{fix} operator as the last step of the algorithm.
+This is also not a real option as the \emph{fix} operator might fail, but also
+because we want our genetic algorithm to keep into account these constraints. We
+would not learn anything about the complex constraints if we ignore them throughout
+the process.

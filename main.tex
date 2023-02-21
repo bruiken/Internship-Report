@@ -1,0 +1,109 @@
+\documentclass[11pt,a4paper]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[all]{xy}
+\usepackage{array}
+\usepackage{listings}
+\usepackage[a4paper]{geometry}
+\usepackage{lscape}
+\usepackage{bm}
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{tikz}
+\usepackage{amsthm}
+\usepackage{hyperref}
+\usepackage{wrapfig}
+\usepackage{xspace}
+\usepackage{fancyvrb}
+\usepackage{caption}
+\usepackage{subcaption}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+\usetikzlibrary{arrows.meta}
+\newtheorem{theorem}{Theorem}[chapter]
+\theoremstyle{definition}
+\newtheorem{example}{Example}[chapter]
+
+\makeatletter %otherwise geometry resets everything
+\Gm@restore@org
+\makeatother
+
+\setlength{\itemsep}{0cm}
+\setlength{\voffset}{0cm}
+\setlength{\headheight}{0cm}
+\setlength{\topmargin}{0cm}
+\setlength{\extrarowheight}{3pt} %for superscripts in tabular
+\setlength{\arraycolsep}{4pt}
+
+\lstset{basicstyle = \footnotesize, breaklines = true}
+
+\graphicspath{{imgs/}}
+
+\newfloat{lstfloat}{htbp}{lop}
+\floatname{lstfloat}{Listing}
+
+\begin{document}
+\begin{titlepage}
+\begin{center}
+\textsc{\LARGE Internship\\Software Science}\\[1.5cm]
+\includegraphics[height=100pt]{logo}
+
+\vspace{0.4cm}
+\textsc{\Large Radboud University}\\[1cm]
+\hrule
+\vspace{0.4cm}
+\textbf{\Large Using a Hybrid Approach to Handle Complex Constraints for Product Line Configuration}\\[0.4cm]
+\hrule
+\vspace{2cm}
+\begin{minipage}[t]{0.45\textwidth}
+\begin{flushleft} \large
+\textit{Author:}\\
+Bob Ruiken\\
+s4721306
+\end{flushleft}
+\end{minipage}
+\begin{minipage}[t]{0.48\textwidth}
+\begin{flushright} \large
+\textit{First supervisor/assessor:}\\
+Daniel Str{\"u}ber\\
+\texttt{d.strueber@cs.ru.nl}\\[1.3cm]
+\textit{Second assessor:}\\
+Jan Tretmans\\
+\texttt{j.tretmans@cs.ru.nl}
+\end{flushright}
+\end{minipage}
+\vfill
+{\large \today}
+\end{center}
+\end{titlepage}
+
+\setcounter{tocdepth}{1}
+\tableofcontents
+\newpage
+
+\setlength{\parskip}{10pt}
+
+\chapter{Introduction}\label{ch:introduction}
+\input{introduction}
+\chapter{Background}\label{ch:background}
+This chapter will cover the background details of Software Product Lines
+(SPLs) and extend this with Extended Feature Models. We will also 
+further introduce the tool that we are working with: aCaPulCO.
+\input{featuremodels}
+\input{acapulco}
+\input{approach}
+\input{evaluation}
+\input{conclusion}
+
+\bibliographystyle{plain}
+\bibliography{bibliography}
+
+\end{document}
+\endinput

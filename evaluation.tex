@@ -1,0 +1,57 @@
+\chapter{Evaluation}\label{ch:evaluation}
+This chapter covers the evaluation of the implemented operator. The quantifiable
+results are minimal, because of the problems of the approach mentioned previously.
+This chapter first starts with some notes on the generation of test data, and the
+difficulties that come with it. We then briefly give some results on the time
+taken by our implemented \emph{fix} operator.
+
+\section{(Generation of) Test Data}\label{sec:testdata}
+After the discovery of the aforementioned problems with the implementation of the
+\emph{fix} operator in the current version of aCaPulCO, it should be clear that
+we cannot test the large feature models that were used to evaluate the tool without
+the \emph{fix} operator. These large feature models such as \emph{Linux} and
+\emph{Automotive} (which are common feature models used to benchmark tools) are
+simply too large to be able to generate all the CPCOs. For the small feature models,
+we already have several other tools that can handle them. This means that we
+need to get ahold of more input data.
+
+To be able to control certain parameters in feature model generation, we could use
+a tool such as BeTTy~\cite{segura2012betty} (BEnchmarking and TesTing on the analYsis
+of feature models). It is a highly configurable tool that can be used to generate
+(extended) feature models, it is easy to use parallel to aCaPulCO, as it is also
+written in Java.
+
+Because we want to benchmark specifically our \emph{fix} operator, we want to
+generate feature models with many cross-tree constraints. Specifically, we want to
+generate \emph{complex} cross-tree constraints. It should be clear that a feature
+model with many cross-tree constraints would also need many features. If we have
+a limited number of features, it is difficult to generate cross-tree constraints
+that do not invalidate other constraints. We also do not want cross-tree constraints
+to create dead features (features that can never be active), or false optional 
+features (features that should be optional but are made mandatory because of
+added constraints). For a tool such as BeTTy to create feature models that adhere
+to these requirements, as well as a large number of cross-tree constraints, it needs
+to generate large feature models with thousands of features. This brings us back to
+our initial problem, where we did not want such large models, as it is not feasible
+to generate all the CPCOs for them.
+
+Apart from the difficulty of generating valid cross-tree constraints, it should
+also be noted that a tool such as BeTTy can only generate simple constraints: it
+is limited to creating \emph{requires} and \emph{excludes} relationships. For us,
+this is not useful as aCaPulCO already can deal with these.
+What we can do to prevent this, is to generate simple constraints and mark them
+as complex constraints. With this approach, we do not solve the problem of the
+generation that we mentioned previously.
+
+\section{Results}\label{sec:results}
+In the previous sections, we realised that our \emph{fix} operator is not a good
+fit for the current version of aCaPulCO, as it requires all the CPCO rules to be
+generated, while the other operators in aCaPulCO do not have this requirement.
+The few tests that we have run on the new operator (with small feature models)
+have not shown us any reasonable impact on the runtime of the genetic algorithm
+(there was no measurable difference).
+
+The smaller feature models that were benchmarked in the previous work on aCaPulCO
+do not have to be benchmarked again with the \emph{fix} operator enabled, as these
+small feature models do not contain any complex cross-tree constraints at all. That
+would mean that our new operator does not get any work at all.

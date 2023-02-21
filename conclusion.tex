@@ -1,0 +1,30 @@
+\chapter{Conclusion}\label{ch:conclusion}
+The goal of this research was to create a hybrid approach to deal with
+complex constraints parallel to the CPCOs in aCaPulCO. In the process of
+creating this operator and doing the research, it became clear that this
+approach does not work for aCaPulCO. This is because aCaPulCO, in its
+current state, can work with an incomplete rule generation. The \emph{fix}
+operator that we implemented cannot work with this incompleteness.
+
+The conclusion that we \emph{can} draw from this research, is that feature
+models are complex, and deal with any type of cross-tree constraint
+makes analysis prohibitively expensive. We also see this cost in the
+generation of test data, where it is difficult to generate suitable cross
+tree constraints on the fly. 
+
+The scope of this internship is mainly limited by time, and a lot of time
+has been put into trying to make the operator (in its current form) work.
+When the limitation was identified, there was not enough time to delve into
+the generation of the CPCOs, to try to make it more efficient (the current
+limitation of the generation is explosive memory usage). This means that
+after the discovery of the limitation, the focus was put on trying to find
+the actual limits of the \emph{fix} operator. The idea here was to generate
+suitable feature models, using BeTTy. This also turned out to be a timesink 
+that did not yield positive results, because of the problems mentioned in
+the previous chapter.
+
+To make aCaPulCO work with complex cross-tree constraints, there are multiple
+ways to go in future work. It is possible to look into the current form of
+the CPCO generation and try to solve the memory issues in it. It could also
+be interesting to further look into other ways of repairing the cross-tree
+constraints, without the need for all of the CPCO rules to be generated. 

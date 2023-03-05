@@ -1,14 +1,13 @@
 \chapter{Approach}\label{ch:approach}
-This chapter covers more details on the approach that was taken in this research.
-We will explain the details of the implementation of the \emph{fix} operator
-designed to use in aCaPulCO. We will first look at the separation of the 
-\emph{simple} and \emph{complex} constraints, and how they are represented in
-aCaPulCO. Following that, we look at the design of the operator itself.
+In this chapter we will look at the design of the \emph{fix} operator. To do
+this, we first look at the difference between \emph{simple} and \emph{complex}
+constraints in more detail. After that, the actual design of the operator is
+discussed, as well as the shortcomings of the approach.
 
 \section{Complex constraints}
 First, recall that both the simple and complex constraints are cross-tree
 constraints. Since aCaPulCO currently only accepts simple constraints in its
-CPCO generation, the complex constraints are simply filtered out of the input
+CPCO generation, the current implementation filters out complex constraints from the input
 model. After parsing the cross-tree constraints, the arbitrary boolean formulas
 are converted to CNF notation. The two accepted types of constraints 
 (\emph{requires} and \emph{excludes} relationships) then look as follows:
@@ -85,11 +84,12 @@ fix any complex cross-tree constraint, we may need to activate or deactivate any
 given feature. Thus far, aCaPulCO did not require all the rules to be generated
 to get results. It turns out that aCaPulCO outperforms the other
 state-of-the-art tools, all the while not having generated close to all of the
-CPCOs. This means that for a given feature model with for example 10.000 features,
-it may only generate activation and deactivation rules for 1\% of these features.
-It is of course likely that cross-tree constraints cover many features of the other
-99\% of the non-generated rules. Our fix operator cannot repair those constraints,
-as it can only use the rules.
+CPCOs. This makes sense, because certain (de-)activations from features without a
+CPCO may be included in other CPCOs. For example, for the Automotive feature model,
+a feature model with 14.009 features, \emph{only} 1.600 CPCOs are generated.
+It is of course likely that cross-tree constraints cover many features for which no
+CPCOs are generated. Our fix operator cannot repair those constraints,
+as it can only use the explicitly generated rules.
 
 One possible way of preventing this from happening might be to fix the
 configurations without using the generated rules. If we do that, we manually flip

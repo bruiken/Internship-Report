@@ -8,10 +8,11 @@ example. Apart from these standard relations described in feature models, we
 can also have \emph{extended feature models}~\cite{benavides2005extfms}. These
 feature models also contain non-functional information for features, one can
 imagine that we want to add information such as performance or cost. These
-non-functional parameters can later be used for optimisation problems. Because
-of the complexity of such models, combined with the fact that the multiple
-objectives are orthogonal, this problem is 
-NP-complete~\cite{ochoa2018npcomplete}. 
+non-functional parameters can later be used to guide the configuration, as to
+identify a suitable feature selection - leading to a multi-objective 
+optimization problem. Because
+of the complexity of such models, this problem is NP-complete. The fact that
+the multiple objectives are orthogonal, makes things even worse~\cite{ochoa2018npcomplete}. 
 
 Solving this optimisation problem for feature models has been studied for more
 than fifteen years and the most recent scalable solutions are all based on
@@ -25,16 +26,18 @@ account~\cite{henard2015satibea, pascual2015modagame}. This requires validity
 checking of solutions after applying the operators, and possibly also requires
 some sort of ``fix'' operator to repair solutions. This in-situ fixing takes
 time and thus hurts the performance of those algorithms. Work by Horcas et al.
-mitigates this issue by creating specific genetic operators which do not break
-the validity of feature models by design~\cite{horcas2022breakit}. The
+mitigates this issue by creating specific genetic operators which by design do not break
+the validity of configurations during changes~\cite{horcas2022breakit}. The
 operators are called \emph{consistency-preserving configuration operators}
 (CPCOs). These operators only have to be generated once for a feature model,
 which can be efficiently done before the actual genetic algorithm is
 applied~\cite{horcas2022breakit}. These CPCOs outperform the previous in-situ
-fixing algorithms. There is, however, a problem with CPCOs: the generation of
+fixing algorithms.
+
+There is, however, a problem with CPCOs: the generation of
 the operators is problematic for complex cross-tree constraints. Cross-tree 
-constraints can typically be any boolean formula to define relations between
-features. CPCO generation can deal with simple activations and deactivations,
+constraints can be arbitrary boolean formulas to define relations between
+features. CPCO generation can deal with simple ``requires'' and ``exclude'' relations,
 but do not work well with general boolean formulas.
 
 The goal of this internship is to apply a suggestion that already has been made by 
@@ -48,14 +51,17 @@ have to go through the explosive process of creating CPCOs from complex
 constraints, but we also do not have to apply the costly \emph{fix} operator 
 many times. This idea requires firstly changes in the code of aCaPulCO, the 
 tool created in~\cite{horcas2022breakit}. Secondly, we would like to apply the
-same evaluation from this work again, this time also using the newly created 
+same evaluation setup from this work again, this time also using the newly created 
 variant of the algorithm.
 
 We are going to see that while these goals seem fair and reasonable, they were
 much harder to reach than initially thought. Trying to solve various
 problems was the main time sink. Solving problems is a natural part of doing
 research, but in this internship, the problems turned out to be unsolvable (at
-least in the given timeframe of the internship.)
+least in the given timeframe of the internship.) On a more positive note, we did
+manage to get a working implementation that works on limitedly sized feature models.
+For these specific feature models, our implementation does not seem to have a
+significant performance decrease.
 
 The style of this document is mainly that of a research paper, describing
 background information, the research process, and -- in limited form -- the

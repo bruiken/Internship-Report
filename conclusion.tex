@@ -2,11 +2,16 @@
 The goal of this research was to create a hybrid approach to deal with
 complex constraints parallel to the CPCOs in aCaPulCO. In the process of
 creating this operator and doing the research, it became clear that this
-approach does not work for aCaPulCO. This is because aCaPulCO, in its
+approach is not perfect for aCaPulCO. This is because aCaPulCO, in its
 current state, can work with an incomplete rule generation. The \emph{fix}
 operator that we implemented cannot work with this incompleteness.
 
-The conclusion that we \emph{can} draw from this research, is that feature
+We successfully implement a \emph{fix} operator that can work for smaller
+models. For this, we saw about a 10\% increase in runtime compared to not
+having the operator included. Of course, the models that we benchmarked
+were small and the results prone to randomness of the algorithm. 
+
+Another conclusion that we can draw from this research, is that feature
 models are complex, and deal with any type of cross-tree constraint
 makes analysis prohibitively expensive. We also see this cost in the
 generation of test data, where it is difficult to generate suitable cross

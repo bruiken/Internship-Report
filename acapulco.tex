@@ -1,6 +1,8 @@
 \section{Optimising Extended Feature Models}\label{sec:tools}
 In the introduction, we introduced the concept of \emph{optimising}
-products in software product lines. This optimisation can only be done
+products in software product lines. This optimisation process involves
+at least one objective, in case of multiple objectives, the problem is
+called a \emph{multi-objective} optimisation problem. Optimisation can only be done
 in \emph{Extended Feature Models}, as they contain the relevant data
 to optimise on. We know that the optimisation is NP-complete, as we want
 to optimise multiple orthogonal objectives~\cite{ochoa2018npcomplete}.
@@ -21,13 +23,13 @@ features fixed, we can fully describe products using this bitstring.
 In this section, we will look at how some of the state-of-the-art tools work
 in more detail. We will first look at MODAGAME~\cite{pascual2015modagame}
 and then look into aCaPulCO~\cite{horcas2022breakit} in even more detail, as 
-we will also be working with this tool.
+we will also be working with this tool. The tools that we are talking about
+are all based on the IBEA genetic algorithm, so we focus on those.
 
 \subsection{MODAGAME}\label{sec:modagame}
 Before we delve into how a tool such as MODAGAME~\cite{pascual2015modagame}
 works exactly, we should take a look at the general way how these tools
-function. The tools that we are talking about are all based on the IBEA
-genetic algorithm, so we focus on those.
+function.
 
 In genetic algorithms, we have three important phases: we first need to
 select parents to create new offspring with (the \emph{selection} process),
@@ -183,7 +185,8 @@ will take increasingly more time when the size of the feature models is scaled
 up.
 
 To fix this, the authors of aCaPulCO already suggested going with a hybrid
-approach: we keep the complex constraints out of the CPCO generation and only
+approach (albeit such an approach has not been developed and implemented in
+previous work): we keep the complex constraints out of the CPCO generation and only
 take them into account in a \emph{fix} operator. This would mean that a new
 processing step is added to aCaPulCO, in which only the complex constraints are
 handled. Supposedly, this works better than MODAGAME, because that tool takes
